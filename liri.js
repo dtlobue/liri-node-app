@@ -10,10 +10,10 @@ var Spotify = require('node-spotify-api');
 
 var request = require('request');
 
- /* var spotify = new Spotify({
+  var spotify = new Spotify({
   id: commands.spotifyKeys.consumer_key,
   secret: commands.spotifyKeys.consumer_secret
-}); */
+});
 
 
 
@@ -91,7 +91,21 @@ switch(process.argv[2]) {
     console.log('Actors: ' + JSON.parse(movieData).Actors);
     }
 
-  })
+   })
+
+   break;
+
+  case 'do-what-it-says':
+
+  fs.readFile("random.txt", "utf8", function(error, data) {
+    if (error) {
+      console.log(error);
+    }
+    console.log(data);
+
+  });
+
+  break;
 
   // define default procedure
   default:
