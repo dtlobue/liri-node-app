@@ -10,10 +10,10 @@ var Spotify = require('node-spotify-api');
 
 var request = require('request');
 
-  var spotify = new Spotify({
+/*  var spotify = new Spotify({
   id: commands.spotifyKeys.consumer_key,
   secret: commands.spotifyKeys.consumer_secret
-});
+}); */
 
 
 
@@ -25,11 +25,20 @@ switch(process.argv[2]) {
   // Initial parameter: Twitter (test)
   case 'my-tweets':
     // define variables initially to use below (not sure if correct)
-    var client = (commands.twitterKeys);
+    var TwitterScreenName = "@notHomerJSimpso";
+    TwitterCount = "20";
+    var queryURL = "https://api.twitter.com/1.1/statuses/user_timeline.json?screen_name+"
+    + TwitterScreenName +"&count=" + TwitterCount;
 
     //var params = {screen_name: 'Guy Incognito'};
     // Make API call using specific syntax (?)
-    client.get('statuses/user_timeline',
+    request(queryURL, function(error, response, body) {
+      if (!error && response.statusCode === 200) {
+        console.log("My last 20 Tweets" + JSON.parse(body));
+
+      }
+    });
+/*    client.get('statuses/user_timeline',
     function(error, tweets, response) {
       if (error) {
          console.log('error');
@@ -38,7 +47,7 @@ switch(process.argv[2]) {
          console.log(response);
         }
     }
-   );
+  ); */
     break;
   // Spotify parameter
   case 'spotify-this-song':
@@ -94,7 +103,7 @@ switch(process.argv[2]) {
    })
 
    break;
-
+  // Come back to the below case once Twitter, Spotify cases are solved
   case 'do-what-it-says':
 
   fs.readFile("random.txt", "utf8", function(error, data) {
