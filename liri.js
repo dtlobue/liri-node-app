@@ -28,15 +28,17 @@ switch(process.argv[2]) {
     var TwitterScreenName = "@notHomerJSimpso";
     TwitterCount = "20";
     var queryURL = "https://api.twitter.com/1.1/statuses/user_timeline.json?screen_name+"
-    + TwitterScreenName +"&count=" + TwitterCount;
+    + TwitterScreenName + "&count=" + TwitterCount;
 
     //var params = {screen_name: 'Guy Incognito'};
     // Make API call using specific syntax (?)
     request(queryURL, function(error, response, body) {
       if (!error && response.statusCode === 200) {
         console.log("My last 20 Tweets" + JSON.parse(body));
-
+      } else {
+        console.log("Something went wrong.");
       }
+
     });
 /*    client.get('statuses/user_timeline',
     function(error, tweets, response) {
@@ -53,17 +55,20 @@ switch(process.argv[2]) {
   case 'spotify-this-song':
   // declare variable 'spotify' to use 'search' method
   var spotify = (commands.spotifyKeys);
+
   var song = "";
+
   function trackName() {
     for (var i = 3; i < process.argv.length; i++) {
        song += process.argv[i] + "&20";
     }
-  }
+  };
+
   var queryURL = "https://api.spotify.com/v1/search" + "?type=track" + "q=" + song;
 
   // use search method on spotify object using correct syntax
   spotify
-    .search({ type: 'track', query: queryURL})
+    .search({ type: 'track', query: process.argv[2]})
     .then(function(response) {
       console.log(response);
     })
