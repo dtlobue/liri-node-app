@@ -1,6 +1,6 @@
 // write the code you need to grab the data from keys.js here:
 //global variable to link to 'keys.js' via 'require'
-var commands = require("./keys.js");
+var keys = require("./keys.js");
 
 var fs = require("fs");
 
@@ -10,14 +10,6 @@ var Spotify = require('node-spotify-api');
 
 var request = require('request');
 
-/*  var spotify = new Spotify({
-  id: commands.spotifyKeys.consumer_key,
-  secret: commands.spotifyKeys.consumer_secret
-}); */
-
-
-
-
 
 
 // Creating a conditional to sort through chosen arguments
@@ -25,22 +17,15 @@ switch(process.argv[2]) {
   // Initial parameter: Twitter (test)
   case 'my-tweets':
     // define variables initially to use below (not sure if correct)
-    var TwitterScreenName = "@notHomerJSimpso";
-    TwitterCount = "20";
+    var client = new Twitter(keys.twitterKeys);
+    var twitterScreenName = "@notHomerJSimpso";
+    var twitterCount = "20";
     var queryURL = "https://api.twitter.com/1.1/statuses/user_timeline.json?screen_name+"
-    + TwitterScreenName + "&count=" + TwitterCount;
+    + twitterScreenName + "&count=" + twitterCount;
 
-    //var params = {screen_name: 'Guy Incognito'};
+    var params = {screen_name: 'Guy Incognito'};
     // Make API call using specific syntax (?)
-    request(queryURL, function(error, response, body) {
-      if (!error && response.statusCode === 200) {
-        console.log("My last 20 Tweets" + JSON.parse(body));
-      } else {
-        console.log("Something went wrong.");
-      }
-
-    });
-/*    client.get('statuses/user_timeline',
+    client.get('statuses/user_timeline',
     function(error, tweets, response) {
       if (error) {
          console.log('error');
@@ -49,12 +34,17 @@ switch(process.argv[2]) {
          console.log(response);
         }
     }
-  ); */
+  );
     break;
   // Spotify parameter
   case 'spotify-this-song':
   // declare variable 'spotify' to use 'search' method
-  var spotify = (commands.spotifyKeys);
+  var spotify = new Spotify({
+    id: keys.spotifyKeys.consumer_key,
+    secret: keys.spotifyKeys.consumer_secret
+  });
+
+
 
   var song = "";
 
@@ -62,26 +52,39 @@ switch(process.argv[2]) {
     for (var i = 3; i < process.argv.length; i++) {
        song += process.argv[i] + "&20";
     }
+    return song;
   };
+
+  trackName();
 
   var queryURL = "https://api.spotify.com/v1/search" + "?type=track" + "q=" + song;
 
   // use search method on spotify object using correct syntax
   spotify
-    .search({ type: 'track', query: process.argv[2]})
-    .then(function(response) {
-      console.log(response);
-    })
-    .catch(function(err) {
-      console.log(error);
-    });
+    .search({ type: 'track', query: 'All Fruit Is Ripe', function(err, data) {
+      if (err) {
+        // This is where Ace of Base could go
+        return console.log('Error Occurred: ' + err)
+      }
+
+      console.log(data);
+    }
+  });
+  //  .then(function(response) {
+  //    console.log(response);
+  //  })
+  //  .catch(function(err) {
+  //    console.log(error);
+  //  });
     break;
   // OMDB parameter
   case 'movie-this':
-  if (process.argv[4] === undefined ) {
+  if (process.argv[4] === undefined) {
     var movieName = process.argv[3];
-   } else {
+  } else if (process.argv[4] !== undefined && process.argv[5] === undefined) {
     var movieName = process.argv[3] + "%20" + process.argv[4];
+  } else {
+    var movieName = "mr" + "%20" + "nobody";
   }
   // For movies with titles of more than two words,  a function might work well
   var APIKey = '409cece';
@@ -114,8 +117,10 @@ switch(process.argv[2]) {
   fs.readFile("random.txt", "utf8", function(error, data) {
     if (error) {
       console.log(error);
-    }
+    } else {
     console.log(data);
+    var textData = data;
+    }
 
   });
 
